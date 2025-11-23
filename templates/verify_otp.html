@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -94,6 +95,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="particles-js"></div>
 
@@ -119,23 +121,23 @@
     <script>
         particlesJS("particles-js", {
             "particles": {
-                "number": {"value": 80, "density": {"enable": true, "value_area": 800}},
-                "color": {"value": ["#00c4b4", "#00a69a", "#ffffff"]},
-                "shape": {"type": "circle"},
-                "opacity": {"value": 0.5, "random": true, "anim": {"enable": true, "speed": 1, "opacity_min": 0.1, "sync": false}},
-                "size": {"value": 3, "random": true},
-                "line_linked": {"enable": true, "distance": 150, "color": "#00c4b4", "opacity": 0.4, "width": 1},
-                "move": {"enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out"}
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": ["#00c4b4", "#00a69a", "#ffffff"] },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.5, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#00c4b4", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 2, "direction": "none", "random": false, "straight": false, "out_mode": "out" }
             },
             "interactivity": {
                 "detect_on": "canvas",
-                "events": {"onhover": {"enable": true, "mode": "repulse"}, "onclick": {"enable": true, "mode": "push"}, "resize": true},
-                "modes": {"repulse": {"distance": 100, "duration": 0.4}, "push": {"particles_nb": 4}}
+                "events": { "onhover": { "enable": true, "mode": "repulse" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                "modes": { "repulse": { "distance": 100, "duration": 0.4 }, "push": { "particles_nb": 4 } }
             },
             "retina_detect": true
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const resendEmailText = document.getElementById('resend-email-text');
             const resendWhatsappText = document.getElementById('resend-whatsapp-text');
             const flashMessage = document.getElementById('flash-message');
@@ -153,38 +155,38 @@
             whatsappTimerText.className = 'timer-text';
 
             // Handle form submission with redirect to Google Authenticator
-            otpForm.addEventListener('submit', function(e) {
+            otpForm.addEventListener('submit', function (e) {
                 e.preventDefault();
                 const formData = new FormData(this);
                 fetch('/verify_otp', {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('Verification Response:', data); // Debug log
-                    if (data.success) {
-                        successMessage.textContent = data.message;
-                        successMessage.style.display = 'block';
-                        setTimeout(() => {
-                            window.location.href = data.redirect;
-                        }, 1500);
-                    } else {
-                        flashMessage.textContent = data.message || 'Invalid OTPs. Please try again.';
-                        flashMessage.className = 'danger'; // Apply danger class for styling
-                        setTimeout(() => flashMessage.classList.add('hidden'), 4000); // Hide after 4 seconds
-                    }
-                })
-                .catch(error => {
-                    flashMessage.textContent = 'An error occurred. Please try again.';
-                    flashMessage.className = 'danger';
-                    setTimeout(() => flashMessage.classList.add('hidden'), 4000);
-                    console.error('Error:', error);
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Verification Response:', data); // Debug log
+                        if (data.success) {
+                            successMessage.textContent = data.message;
+                            successMessage.style.display = 'block';
+                            setTimeout(() => {
+                                window.location.href = data.redirect;
+                            }, 1500);
+                        } else {
+                            flashMessage.textContent = data.message || 'Invalid OTPs. Please try again.';
+                            flashMessage.className = 'danger'; // Apply danger class for styling
+                            setTimeout(() => flashMessage.classList.add('hidden'), 4000); // Hide after 4 seconds
+                        }
+                    })
+                    .catch(error => {
+                        flashMessage.textContent = 'An error occurred. Please try again.';
+                        flashMessage.className = 'danger';
+                        setTimeout(() => flashMessage.classList.add('hidden'), 4000);
+                        console.error('Error:', error);
+                    });
             });
 
             // Handle email resend click
-            resendEmailText.addEventListener('click', function() {
+            resendEmailText.addEventListener('click', function () {
                 if (!emailTimer) {
                     fetch('/verify_otp?resend=true&channel=email', { method: 'GET' })
                         .then(response => response.json())
@@ -212,7 +214,7 @@
             });
 
             // Handle WhatsApp resend click
-            resendWhatsappText.addEventListener('click', function() {
+            resendWhatsappText.addEventListener('click', function () {
                 if (!whatsappTimer) {
                     fetch('/verify_otp?resend=true&channel=whatsapp', { method: 'GET' })
                         .then(response => response.json())
@@ -288,12 +290,13 @@
 
         // Input formatting for OTP fields
         document.querySelectorAll('input[type="text"]').forEach(input => {
-            input.addEventListener('input', function(e) {
+            input.addEventListener('input', function (e) {
                 this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);
             });
         });
     </script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92c1095a8ecdb0f1',t:'MTc0MzkzOTkwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
-    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92c13c918a8ebfce',t:'MTc0Mzk0MTk5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'92c1095a8ecdb0f1',t:'MTc0MzkzOTkwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'92c13c918a8ebfce',t:'MTc0Mzk0MTk5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
 </body>
+
 </html>
