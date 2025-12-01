@@ -20,8 +20,8 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
 # UltraMSG API Credentials
-ULTRAMSG_INSTANCE_ID = "instance151877"
-API_TOKEN = "75c8zfuh9jqm1h9v"
+ULTRAMSG_INSTANCE_ID = ""
+API_TOKEN = ""
 ULTRAMSG_URL = f"https://api.ultramsg.com/{ULTRAMSG_INSTANCE_ID}/messages/chat"
 
 # Configure Database
@@ -35,8 +35,8 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'gdscnfsu.shashank@gmail.com'
-app.config['MAIL_PASSWORD'] = 'qkjempcpurhzrcmb'
+app.config['MAIL_USERNAME'] = ''
+app.config['MAIL_PASSWORD'] = ''
 mail = Mail(app)
 
 # Database Model
