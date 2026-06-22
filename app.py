@@ -20,9 +20,9 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 
 # UltraMSG API Credentials
-ULTRAMSG_INSTANCE_ID = ""
-API_TOKEN = ""
-ULTRAMSG_URL = f"https://api.ultramsg.com/{ULTRAMSG_INSTANCE_ID}/messages/chat"
+ULTRAMSG_INSTANCE_ID = "instance181867"
+API_TOKEN = "6rbbiapqjyq4f77v"
+ULTRAMSG_URL = f"https://api.ultramsg.com/instance181867/"
 
 # Configure Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -35,8 +35,8 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = ''
-app.config['MAIL_PASSWORD'] = ''
+app.config['MAIL_USERNAME'] = 'gujarat123eb@gmail.com'
+app.config['MAIL_PASSWORD'] = 'qgrfwmwhyokaiztu'
 mail = Mail(app)
 
 # Database Model
@@ -61,7 +61,12 @@ def send_otp_via_whatsapp(phone_number, otp):
         "body": f"Your OTP is: {otp}",
         "priority": 10
     }
-    response = requests.post(ULTRAMSG_URL, data=payload)
+
+    response = requests.post(ULTRAMSG_URL + "messages/chat", data=payload)
+
+    print("ULTRAMSG STATUS:", response.status_code)
+    print("ULTRAMSG RESPONSE:", response.text)
+
     return response.json()
 
 # Function to generate QR code as a base64 string
@@ -226,13 +231,16 @@ def signup():
         otp_email = str(random.randint(100000, 999999))
         msg = Message('Your OTP Code', sender=app.config['MAIL_USERNAME'], recipients=[email])
         msg.body = f'Your email OTP code is: {otp_email}'
+
         try:
             mail.send(msg)
         except Exception as e:
-            flash('An error occurred while sending the email OTP. Please try again.', 'danger')
+            print("EMAIL ERROR:", str(e))
+            flash(str(e), 'danger')
             return redirect(url_for('signup'))
 
         otp_whatsapp = str(random.randint(100000, 999999))
+        
         try:
             send_otp_via_whatsapp(phone, otp_whatsapp)
         except Exception as e:
@@ -461,7 +469,7 @@ def login_verify():
 
 @app.route('/success')
 def success():
-    return redirect("https://identityreview.com/wp-content/uploads/2021/08/multi-factor-1536x639.png")
+    return redirect("https://linkedin.com/in/ujjwal-shakya-3a89622b5")
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
