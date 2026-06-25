@@ -13,30 +13,33 @@ import qrcode
 import sys
 from datetime import datetime, timedelta
 import secrets
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 sys.path.append(".")
 
 app = Flask(__name__)
-app.secret_key = SECRET_KEY
+app.secret_key = os.getenv("SECRET_KEY")
 
 # UltraMSG API Credentials
-ULTRAMSG_INSTANCE_ID = "instance181867"
-API_TOKEN = "6rbbiapqjyq4f77v"
-ULTRAMSG_URL = f"https://api.ultramsg.com/instance181867/"
+ULTRAMSG_INSTANCE_ID = os.getenv('ULTRAMSG_INSTANCE_ID')
+API_TOKEN = os.getenv('API_TOKEN')
+ULTRAMSG_URL = f"https://api.ultramsg.com/{ULTRAMSG_INSTANCE_ID}/"
 
 # Configure Database
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # Configure Mail Server
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USE_SSL'] = False
-app.config['MAIL_USERNAME'] = 'gujarat123eb@gmail.com'
-app.config['MAIL_PASSWORD'] = 'qgrfwmwhyokaiztu'
+app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER")
+app.config['MAIL_PORT'] = int(os.getenv("MAIL_PORT"))
+app.config['MAIL_USE_TLS'] = os.getenv("MAIL_USE_TLS") == "True"
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
 mail = Mail(app)
 
 # Database Model
