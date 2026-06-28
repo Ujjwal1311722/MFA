@@ -227,84 +227,44 @@ def home():
 def signup():
     if request.method == 'POST':
 
-        print("Step 1")
-
         name = request.form['name']
         email = request.form['email']
-        phone = request.form['phone']
+        phone = request.form.get('phone')
         password = request.form['password']
 
-        print("Step 2")
-
+        # Check if the user already exists
         existing_user = User.query.filter_by(email=email).first()
-
-        print("Step 3")
+        if existing_user:
+            flash('User already exists.', 'danger')
+            return redirect(url_for('signup'))
 
         otp_email = str(random.randint(100000, 999999))
-
-        print("Step 4")
-
-        msg = Message(
-            'Your OTP Code',
-            sender=app.config['MAIL_USERNAME'],
-            recipients=[email]
-        )
-
+        msg = Message('Your OTP Code', sender=app.config['MAIL_USERNAME'], recipients=[email])
         msg.body = f'Your email OTP code is: {otp_email}'
 
-        print("Step 5 Before Email")
+        try:
+            mail.send(msg)
+        except Exception as e:
+            print("EMAIL ERROR:", str(e))
+            flash(str(e), 'danger')
+            return redirect(url_for('signup'))
 
-        with mail.connect() as conn:
-            conn.send(msg)
-
-        print("Step 6 After Email")
-
-        otp_whatsapp = str(random.randint(100000,999999))
-
-        print("Step 7 Before WhatsApp")
-
-        send_otp_via_whatsapp(phone, otp_whatsapp)
-
-        print("Step 8 After WhatsApp")
-
-        # name = request.form['name']
-        # email = request.form['email']
-        # phone = request.form.get('phone')
-        # password = request.form['password']
-
-        # # Check if the user already exists
-        # existing_user = User.query.filter_by(email=email).first()
-        # if existing_user:
-        #     flash('User already exists.', 'danger')
-        #     return redirect(url_for('signup'))
-
-        # otp_email = str(random.randint(100000, 999999))
-        # msg = Message('Your OTP Code', sender=app.config['MAIL_USERNAME'], recipients=[email])
-        # msg.body = f'Your email OTP code is: {otp_email}'
-
-        # try:
-        #     mail.send(msg)
-        # except Exception as e:
-        #     print("EMAIL ERROR:", str(e))
-        #     flash(str(e), 'danger')
-        #     return redirect(url_for('signup'))
-
-        # otp_whatsapp = str(random.randint(100000, 999999))
+        otp_whatsapp = str(random.randint(100000, 999999))
         
-        # try:
-        #     send_otp_via_whatsapp(phone, otp_whatsapp)
-        # except Exception as e:
-        #     flash('An error occurred while sending the WhatsApp OTP. Please try again.', 'danger')
-        #     return redirect(url_for('signup'))
+        try:
+            send_otp_via_whatsapp(phone, otp_whatsapp)
+        except Exception as e:
+            flash('An error occurred while sending the WhatsApp OTP. Please try again.', 'danger')
+            return redirect(url_for('signup'))
 
-        # # Store temporary session data for verification
-        # session['name'] = name
-        # session['email'] = email
-        # session['phone'] = phone
-        # session['password'] = password
-        # session['otp_email'] = otp_email
-        # session['otp_whatsapp'] = otp_whatsapp
-        # return redirect(url_for('verify_otp'))
+        # Store temporary session data for verification
+        session['name'] = name
+        session['email'] = email
+        session['phone'] = phone
+        session['password'] = password
+        session['otp_email'] = otp_email
+        session['otp_whatsapp'] = otp_whatsapp
+        return redirect(url_for('verify_otp'))
 
     return render_template('signup.html')
 
