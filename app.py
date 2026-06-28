@@ -371,18 +371,18 @@ def google_auth():
 
     user = User.query.filter_by(email=email).first()
     if not user:
-        totp_secret = pyotp.random_base32()
-        user = User(
-            name=session.get('name'),
-            email=email,
-            phone=session.get('phone'),
-            password=generate_password_hash(session.get('password')),
-            totp_secret=totp_secret
-        )
-        db.session.add(user)
-        db.session.commit()
+        user = User.query.filter_by(email=email).first()
 
-    totp = pyotp.TOTP(user.totp_secret)
+    if user:
+        flash("User already exists.", "danger")
+        return redirect(url_for("login"))
+
+    if "totp_secret" not in session:
+        session["totp_secret"] = pyotp.random_base32()
+
+    totp_secret = session["totp_secret"]
+
+    totp = pyotp.TOTP(totp_secret)
     provisioning_uri = totp.provisioning_uri(name=email, issuer_name="MFA Project")
 
     if request.method == 'POST':
@@ -391,13 +391,24 @@ def google_auth():
             flash('Please enter the Google Authenticator code.', 'danger')
             return redirect(url_for('google_auth'))
 
-        if totp.verify(otp_code):
-            session.pop('email', None)
-            session.pop('name', None)
-            session.pop('phone', None)
-            session.pop('password', None)
-            flash('User registered successfully.', 'success')
-            return redirect(url_for('login'))
+        if totp.verify(otp_code, valid_window=1):
+
+            user = User(
+                name=session["name"],
+                email=session["email"],
+                phone=session["phone"],
+                password=generate_password_hash(session["password"]),
+                totp_secret=session["totp_secret"]
+            )
+
+            db.session.add(user)
+            db.session.commit()
+
+            session.clear()
+
+            flash("Registration Successful!", "success")
+            return redirect(url_for("login"))
+        
         else:
             flash('Invalid Google Authenticator code.', 'danger')
 
