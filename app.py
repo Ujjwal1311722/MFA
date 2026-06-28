@@ -36,8 +36,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-with app.app_context():
-    db.create_all()
 
 # Configure Mail Server
 app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER")
@@ -486,10 +484,11 @@ def login_verify():
 
     return render_template('login_verify.html')
 
+with app.app_context():
+        db.create_all()
+
 @app.route('/success')
 def success():
     return redirect("https://linkedin.com/in/ujjwal-shakya-3a89622b5")
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
     app.run(debug=True)
