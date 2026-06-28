@@ -36,6 +36,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
+with app.app_context():
+    db.create_all()
 
 # Configure Mail Server
 app.config['MAIL_SERVER'] = os.getenv("MAIL_SERVER")
