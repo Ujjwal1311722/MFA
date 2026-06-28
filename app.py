@@ -226,10 +226,6 @@ def home():
 def signup():
     if request.method == 'POST':
 
-@app.route('/signup', methods=['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-
         print("Step 1")
 
         name = request.form['name']
