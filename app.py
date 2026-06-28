@@ -43,6 +43,12 @@ app.config['MAIL_PORT'] = int(os.getenv("MAIL_PORT"))
 app.config['MAIL_USE_TLS'] = os.getenv("MAIL_USE_TLS") == "True"
 app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
 app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
+
+print("MAIL_SERVER =", os.getenv("MAIL_SERVER"))
+print("MAIL_PORT =", os.getenv("MAIL_PORT"))
+print("MAIL_USERNAME =", os.getenv("MAIL_USERNAME"))
+print("MAIL_PASSWORD exists =", bool(os.getenv("MAIL_PASSWORD")))
+
 mail = Mail(app)
 
 # Database Model
